@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - run: |
-          jar cvf SmithWilliam.war *
+          jar cvf AbdelhakHAMMADOU.war *
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
       with:
