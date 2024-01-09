@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -12,44 +13,68 @@
     String url = "jdbc:mariadb://localhost:3306/films";
     String user = "mysql";
     String password = "mysql";
-
-        // Charger le pilote JDBC (pilote disponible dans WEB-INF/lib)
+    try {
+        // Charger le pilote JDBC
         Class.forName("org.mariadb.jdbc.Driver");
 
         // Établir la connexion
         Connection conn = DriverManager.getConnection(url, user, password);
+
         // Exemple de requête SQL
-        String sql = "SELECT idFilm, titre, année FROM Film WHERE année >= 2000";
+        String sql = "SELECT idFilm, titre, année FROM Film WHERE année >= 2000 AND année <= 2015";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
 
-        // Afficher les résultats (à adapter selon vos besoins)
+        // Afficher les résultats
         while (rs.next()) {
-            String colonne1 = rs.getString("idFilm");
-            String colonne2 = rs.getString("titre");
-            String colonne3 = rs.getString("année");
-            // Faites ce que vous voulez avec les données...
-            //Exemple d'affichage de 2 colonnes
-            out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
+            String idFilm = rs.getString("idFilm");
+            String titre = rs.getString("titre");
+            int annee = rs.getInt("année");
+            out.println("ID: " + idFilm + ", Titre: " + titre + ", Année: " + annee + "<br>");
         }
 
-        // Fermer les ressources 
+        // Fermer les ressources
         rs.close();
         pstmt.close();
         conn.close();
+    } catch (Exception e) {
+        out.println("Erreur: " + e.getMessage());
+    }
     %>
 
-<h2>Exercice 1 : Les films entre 2000 et 2015</h2>
-<p>Extraire les films dont l'année est supérieur à l'année 2000 et inférieur à 2015.</p>
+    <h2>Exercice 1 : Les films entre deux années spécifiées</h2>
+    <form method="get">
+        <label for="anneeDebut">Année de début :</label>
+        <input type="number" id="anneeDebut" name="anneeDebut" required>
+        <label for="anneeFin">Année de fin :</label>
+        <input type="number" id="anneeFin" name="anneeFin" required>
+        <input type="submit" value="Rechercher">
+    </form>
 
-<h2>Exercice 2 : Année de recherche</h2>
-<p>Créer un champ de saisie permettant à l'utilisateur de choisir l'année de sa recherche.</p>
+    <h2>Exercice 2 : Année de recherche</h2>
+<form action="rechercheAnnee.jsp" method="get">
+    <label for="annee">Entrez une année pour la recherche:</label>
+    <input type="number" id="annee" name="annee" required>
+    <input type="submit" value="Rechercher">
+</form>
 
 <h2>Exercice 3 : Modification du titre du film</h2>
-<p>Créer un fichier permettant de modifier le titre d'un film sur la base de son ID (ID choisi par l'utilisateur)</p>
+<form action="modifierTitre.jsp" method="post">
+    <label for="idFilm">ID du film:</label>
+    <input type="text" id="idFilm" name="idFilm" required>
+    <label for="nouveauTitre">Nouveau titre:</label>
+    <input type="text" id="nouveauTitre" name="nouveauTitre" required>
+    <input type="submit" value="Modifier le titre">
+</form>
 
 <h2>Exercice 4 : La valeur maximum</h2>
-<p>Créer un formulaire pour saisir un nouveau film dans la base de données</p>
+<form action="ajouterFilm.jsp" method="post">
+    <label for="titre">Titre du film:</label>
+    <input type="text" id="titre" name="titre" required>
+    <label for="annee">Année:</label>
+    <input type="number" id="annee" name="annee" required>
+    <input type="submit" value="Ajouter un film">
+</form>
 
 </body>
 </html>
