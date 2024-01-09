@@ -53,14 +53,14 @@
      <!-- Exercice 2 : Année de recherche -->
     <h2>Exercice 2 : Année de recherche</h2>
     <form method="get" action="#">
-        <label for="annee">Entrez une année pour la recherche:</label>
-        <input type="number" id="annee" name="annee" required>
+        <label for="rechercheAnnee">Entrez une année pour la recherche:</label>
+        <input type="number" id="rechercheAnnee" name="rechercheAnnee" required>
         <input type="submit" value="Rechercher">
     </form>
 
     <% 
-    String annee = request.getParameter("annee");
-    if (annee != null && !annee.trim().isEmpty()) {
+    String rechercheAnnee = request.getParameter("rechercheAnnee");
+    if (rechercheAnnee != null && !rechercheAnnee.trim().isEmpty()) {
         try {
             String url = "jdbc:mariadb://localhost:3306/films";
             String user = "mysql";
@@ -70,7 +70,7 @@
 
             String sql = "SELECT idFilm, titre, année FROM Film WHERE année = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, Integer.parseInt(annee));
+            pstmt.setInt(1, Integer.parseInt(rechercheAnnee));
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -129,15 +129,15 @@ if (idFilm != null && nouveauTitre != null && !idFilm.trim().isEmpty() && !nouve
 <form method="post" action="#">
     <label for="titre">Titre du film:</label>
     <input type="text" id="titre" name="titre" required>
-    <label for="annee">Année:</label>
-    <input type="number" id="annee" name="annee" required>
+    <label for="nouvelleAnneeFilm">Année:</label>
+    <input type="number" id="nouvelleAnneeFilm" name="nouvelleAnneeFilm" required>
     <input type="submit" value="Ajouter un film">
 </form>
 
 <% 
 String titre = request.getParameter("titre");
-String annee = request.getParameter("annee");
-if (titre != null && annee != null && !titre.trim().isEmpty() && !annee.trim().isEmpty()) {
+String nouvelleAnneeFilm = request.getParameter("nouvelleAnneeFilm");
+if (titre != null && nouvelleAnneeFilm != null && !titre.trim().isEmpty() && !nouvelleAnneeFilm.trim().isEmpty()) {
     try {
         String url = "jdbc:mariadb://localhost:3306/films";
         String user = "mysql";
@@ -148,7 +148,7 @@ if (titre != null && annee != null && !titre.trim().isEmpty() && !annee.trim().i
         String sql = "INSERT INTO Film (titre, année) VALUES (?, ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, titre);
-        pstmt.setInt(2, Integer.parseInt(annee));
+        pstmt.setInt(2, Integer.parseInt(nouvelleAnneeFilm));
         int affectedRows = pstmt.executeUpdate();
 
         out.println(affectedRows + " film(s) ajouté(s).");
