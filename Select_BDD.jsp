@@ -50,13 +50,41 @@
     %>
 
     <!-- Les autres exercices doivent être traités dans leurs fichiers JSP respectifs -->
-    <!-- Exercice 2 : Année de recherche -->
+     <!-- Exercice 2 : Année de recherche -->
     <h2>Exercice 2 : Année de recherche</h2>
-    <form action="rechercheAnnee.jsp" method="get">
+    <form method="get" action="#">
         <label for="annee">Entrez une année pour la recherche:</label>
         <input type="number" id="annee" name="annee" required>
         <input type="submit" value="Rechercher">
     </form>
+
+    <% 
+    String annee = request.getParameter("annee");
+    if (annee != null && !annee.trim().isEmpty()) {
+        try {
+            String url = "jdbc:mariadb://localhost:3306/films";
+            String user = "mysql";
+            String password = "mysql";
+            Class.forName("org.mariadb.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            String sql = "SELECT idFilm, titre, année FROM Film WHERE année = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, Integer.parseInt(annee));
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                out.println("ID: " + rs.getString("idFilm") + ", Titre: " + rs.getString("titre") + ", Année: " + rs.getInt("année") + "<br>");
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (Exception e) {
+            out.println("Erreur: " + e.getMessage());
+        }
+    }
+    %>
+
 
     <!-- Exercice 3 : Modification du titre du film -->
     <h2>Exercice 3 : Modification du titre du film</h2>
